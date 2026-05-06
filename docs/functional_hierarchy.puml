@@ -1,0 +1,215 @@
+@startuml SecondHand_Functional_Hierarchy
+
+!theme plain
+skinparam rectangle {
+  BackgroundColor<<Module>> LightBlue
+  BackgroundColor<<Feature>> LightGreen
+  BackgroundColor<<Function>> LightYellow
+  BackgroundColor<<SubFunction>> LightCyan
+}
+
+title Biểu Đồ Phân Cấp Chức Năng - SecondHand App
+
+' ===== TOP LEVEL =====
+rectangle "SecondHand E-Commerce Platform" as Main
+
+' ===== MAIN MODULES =====
+rectangle "Authentication Module" <<Module>> as Auth
+rectangle "User Management Module" <<Module>> as UserMgmt
+rectangle "Product Management Module" <<Module>> as ProductMgmt
+rectangle "Search & Discovery Module" <<Module>> as Search
+rectangle "Transaction Module" <<Module>> as Transaction
+rectangle "Communication Module" <<Module>> as Communication
+rectangle "Admin Management Module" <<Module>> as Admin
+rectangle "Notification Module" <<Module>> as Notification
+
+Main --> Auth
+Main --> UserMgmt
+Main --> ProductMgmt
+Main --> Search
+Main --> Transaction
+Main --> Communication
+Main --> Admin
+Main --> Notification
+
+' ===== AUTHENTICATION MODULE =====
+rectangle "User Registration" <<Feature>> as Reg
+rectangle "User Login" <<Feature>> as Login
+rectangle "Social Login" <<Feature>> as SocialLogin
+rectangle "Password Recovery" <<Feature>> as PasswordRecovery
+rectangle "Session Management" <<Feature>> as Session
+
+Auth --> Reg
+Auth --> Login
+Auth --> SocialLogin
+Auth --> PasswordRecovery
+Auth --> Session
+
+' Registration Sub-functions
+rectangle "Email Validation" <<SubFunction>> as EmailVal
+rectangle "Phone Verification" <<SubFunction>> as PhoneVal
+rectangle "Account Creation" <<SubFunction>> as AccCreate
+Reg --> EmailVal
+Reg --> PhoneVal
+Reg --> AccCreate
+
+' Login Sub-functions
+rectangle "Credential Verification" <<SubFunction>> as CredVer
+rectangle "JWT Token Generation" <<SubFunction>> as JWTGen
+rectangle "Remember Me" <<SubFunction>> as RememberMe
+Login --> CredVer
+Login --> JWTGen
+Login --> RememberMe
+
+' ===== USER MANAGEMENT MODULE =====
+rectangle "Profile Management" <<Feature>> as Profile
+rectangle "Address Management" <<Feature>> as Address
+rectangle "Avatar Management" <<Feature>> as Avatar
+rectangle "Account Settings" <<Feature>> as Settings
+
+UserMgmt --> Profile
+UserMgmt --> Address
+UserMgmt --> Avatar
+UserMgmt --> Settings
+
+' Profile Sub-functions
+rectangle "Personal Info Update" <<SubFunction>> as PersonalInfo
+rectangle "Contact Info Update" <<SubFunction>> as ContactInfo
+rectangle "Privacy Settings" <<SubFunction>> as Privacy
+Profile --> PersonalInfo
+Profile --> ContactInfo
+Profile --> Privacy
+
+' ===== PRODUCT MANAGEMENT MODULE =====
+rectangle "Product Creation" <<Feature>> as CreateProduct
+rectangle "Product Editing" <<Feature>> as EditProduct
+rectangle "Product Deletion" <<Feature>> as DeleteProduct
+rectangle "Image Management" <<Feature>> as ImageMgmt
+rectangle "Product Status Management" <<Feature>> as StatusMgmt
+
+ProductMgmt --> CreateProduct
+ProductMgmt --> EditProduct
+ProductMgmt --> DeleteProduct
+ProductMgmt --> ImageMgmt
+ProductMgmt --> StatusMgmt
+
+' Product Creation Sub-functions
+rectangle "Product Info Input" <<SubFunction>> as ProductInfo
+rectangle "Category Selection" <<SubFunction>> as CategorySel
+rectangle "Price Setting" <<SubFunction>> as PriceSet
+rectangle "Description Writing" <<SubFunction>> as DescWrite
+CreateProduct --> ProductInfo
+CreateProduct --> CategorySel
+CreateProduct --> PriceSet
+CreateProduct --> DescWrite
+
+' ===== SEARCH & DISCOVERY MODULE =====
+rectangle "Product Search" <<Feature>> as ProductSearch
+rectangle "Category Browsing" <<Feature>> as CategoryBrowse
+rectangle "Advanced Filtering" <<Feature>> as Filter
+rectangle "Sorting Options" <<Feature>> as Sorting
+rectangle "Product Recommendations" <<Feature>> as Recommend
+
+Search --> ProductSearch
+Search --> CategoryBrowse
+Search --> Filter
+Search --> Sorting
+Search --> Recommend
+
+' Search Sub-functions
+rectangle "Keyword Search" <<SubFunction>> as KeywordSearch
+rectangle "Full-text Search" <<SubFunction>> as FullTextSearch
+rectangle "Search History" <<SubFunction>> as SearchHistory
+ProductSearch --> KeywordSearch
+ProductSearch --> FullTextSearch
+ProductSearch --> SearchHistory
+
+' Filter Sub-functions
+rectangle "Price Range Filter" <<SubFunction>> as PriceFilter
+rectangle "Location Filter" <<SubFunction>> as LocationFilter
+rectangle "Condition Filter" <<SubFunction>> as ConditionFilter
+Filter --> PriceFilter
+Filter --> LocationFilter
+Filter --> ConditionFilter
+
+' ===== TRANSACTION MODULE =====
+rectangle "Order Creation" <<Feature>> as CreateOrder
+rectangle "Payment Processing" <<Feature>> as Payment
+rectangle "Order Management" <<Feature>> as OrderMgmt
+rectangle "Order History" <<Feature>> as OrderHistory
+rectangle "Review & Rating" <<Feature>> as Review
+
+Transaction --> CreateOrder
+Transaction --> Payment
+Transaction --> OrderMgmt
+Transaction --> OrderHistory
+Transaction --> Review
+
+' Payment Sub-functions
+rectangle "Wallet Payment" <<SubFunction>> as WalletPay
+rectangle "Bank Transfer" <<SubFunction>> as BankTransfer
+rectangle "Payment Confirmation" <<SubFunction>> as PayConfirm
+Payment --> WalletPay
+Payment --> BankTransfer
+Payment --> PayConfirm
+
+' ===== COMMUNICATION MODULE =====
+rectangle "Real-time Chat" <<Feature>> as Chat
+rectangle "Message Management" <<Feature>> as MessageMgmt
+rectangle "Conversation History" <<Feature>> as ConvHistory
+rectangle "File Sharing" <<Feature>> as FileShare
+
+Communication --> Chat
+Communication --> MessageMgmt
+Communication --> ConvHistory
+Communication --> FileShare
+
+' Chat Sub-functions
+rectangle "Text Messaging" <<SubFunction>> as TextMsg
+rectangle "Image Sharing" <<SubFunction>> as ImageShare
+rectangle "Online Status" <<SubFunction>> as OnlineStatus
+Chat --> TextMsg
+Chat --> ImageShare
+Chat --> OnlineStatus
+
+' ===== ADMIN MANAGEMENT MODULE =====
+rectangle "User Management" <<Feature>> as AdminUserMgmt
+rectangle "Product Moderation" <<Feature>> as ProductMod
+rectangle "Report Handling" <<Feature>> as ReportHandle
+rectangle "System Analytics" <<Feature>> as Analytics
+rectangle "Content Management" <<Feature>> as ContentMgmt
+
+Admin --> AdminUserMgmt
+Admin --> ProductMod
+Admin --> ReportHandle
+Admin --> Analytics
+Admin --> ContentMgmt
+
+' Product Moderation Sub-functions
+rectangle "Product Review" <<SubFunction>> as ProductReview
+rectangle "Approval Process" <<SubFunction>> as Approval
+rectangle "Rejection Handling" <<SubFunction>> as Rejection
+ProductMod --> ProductReview
+ProductMod --> Approval
+ProductMod --> Rejection
+
+' ===== NOTIFICATION MODULE =====
+rectangle "Push Notifications" <<Feature>> as PushNotif
+rectangle "Email Notifications" <<Feature>> as EmailNotif
+rectangle "In-App Notifications" <<Feature>> as InAppNotif
+rectangle "Notification Management" <<Feature>> as NotifMgmt
+
+Notification --> PushNotif
+Notification --> EmailNotif
+Notification --> InAppNotif
+Notification --> NotifMgmt
+
+' Notification Management Sub-functions
+rectangle "Notification Templates" <<SubFunction>> as NotifTemplates
+rectangle "Delivery Tracking" <<SubFunction>> as DeliveryTrack
+rectangle "User Preferences" <<SubFunction>> as UserPrefs
+NotifMgmt --> NotifTemplates
+NotifMgmt --> DeliveryTrack
+NotifMgmt --> UserPrefs
+
+@enduml

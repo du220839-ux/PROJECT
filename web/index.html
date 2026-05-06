@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="secondhand_app">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>secondhand_app</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Google Sign-In -->
+  <meta name="google-signin-client_id" content="256558197701-1f6d9k3s4l5m7n8o0p2q4r6t8v0x2z4y.apps.googleusercontent.com">
+  
+  <!-- Facebook Sign-In -->
+  <meta property="fb:app_id" content="YOUR_FACEBOOK_APP_ID">
+
+  <script>
+    // Disable Google One Tap prompt to avoid FedCM compatibility issues
+    // This prevents the nested prompts error and "unknown_reason" enum error
+    window.onload = function() {
+      // Disable One Tap
+      if (window.google && window.google.accounts) {
+        try {
+          window.google.accounts.id.disableAutoSelect();
+        } catch (e) {
+          console.log('Google auto-select disable attempt (safe to ignore):', e);
+        }
+      }
+    };
+    
+    // Additional fallback: prevent prompt callback errors
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      try {
+        // Override prompt moment handler to catch and suppress enum errors
+        const originalSetOneTapUiMonitor = window.google.accounts.id.setOneTapUiMonitor;
+        if (originalSetOneTapUiMonitor) {
+          window.google.accounts.id.setOneTapUiMonitor = function(callback) {
+            return originalSetOneTapUiMonitor(function(notification) {
+              try {
+                if (notification && notification.isSkippedMoment) {
+                  console.log('One Tap skipped (this is expected when auto-select is disabled)');
+                  // Don't propagate to callback to avoid enum parsing errors
+                  return;
+                }
+                callback(notification);
+              } catch (e) {
+                console.log('Suppressed FedCM prompt error (safe to ignore):', e);
+              }
+            });
+          };
+        }
+      } catch (e) {
+        console.log('Google ID monitor setup (safe to ignore):', e);
+      }
+    }
+    
+    // The value below is injected by flutter build, do not touch.
+    var serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+</head>
+<body>
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

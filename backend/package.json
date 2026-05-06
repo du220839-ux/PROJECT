@@ -1,0 +1,37 @@
+{
+  "name": "secondhand-backend",
+  "version": "1.0.0",
+  "description": "SecondHand API using Express + SQL Server",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test:db": "node -r dotenv/config test_db.js",
+    "test:api": "node -r dotenv/config test_api.js",
+    "test:ai": "node -r dotenv/config test_local_search.js",
+    "reset:demo": "node -r dotenv/config scripts/reset_demo_data.js",
+    "seed:samples": "node -r dotenv/config scripts/seed_sample_products.js",
+    "install:deps": "npm install",
+    "health": "curl http://localhost:8000/api/health",
+    "help": "node show-help.js",
+    "setup": "npm install && npm run test:db && echo '✅ Setup complete!'",
+    "logs": "node -e \"console.log('Backend running on: http://localhost:8000')\""
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mssql": "^10.0.2",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^4.2.1",
+    "secondhand-backend": "file:"
+  },
+  "optionalDependencies": {
+    "openai": "^4.104.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

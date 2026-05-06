@@ -1,0 +1,183 @@
+@startuml SecondHand_Sequence_Diagrams
+
+!theme plain
+skinparam sequenceMessageAlign center
+
+title Biểu Đồ Tuần Tự - SecondHand App
+
+' ===== 1. ĐĂNG KÝ TÀI KHOẢN =====
+rectangle "Đăng ký tài khoản" {
+    actor User
+    participant "Mobile App" as App
+    participant "API Gateway" as API
+    participant "Auth Controller" as Auth
+    participant "Database" as DB
+    
+    User -> App: Nhập thông tin đăng ký
+    App -> App: Validate form
+    App -> API: POST /auth/register
+    API -> Auth: register(req, res)
+    Auth -> Auth: Kiểm tra email tồn tại
+    Auth -> DB: SELECT * FROM users WHERE email = ?
+    DB --> Auth: Result set
+    Auth -> Auth: Mã hóa password
+    Auth -> DB: INSERT INTO users
+    DB --> Auth: User created
+    Auth --> API: User + Token
+    API --> App: 201 Created + User data
+    App --> User: Hiển thị đăng ký thành công
+}
+
+' ===== 2. ĐĂNG SẢN PHẨM MỚI =====
+rectangle "Đăng sản phẩm mới" {
+    actor Seller
+    participant "Mobile App" as App2
+    participant "API Gateway" as API2
+    participant "Product Controller" as Product
+    participant "Database" as DB2
+    participant "File Storage" as Storage
+    
+    Seller -> App2: Nhập thông tin SP
+    Seller -> App2: Chọn hình ảnh
+    App2 -> App2: Validate form & images
+    App2 -> API2: POST /products (FormData)
+    API2 -> Product: createProduct(req, res)
+    Product -> Product: Validate product data
+    Product -> DB2: INSERT INTO products
+    DB2 --> Product: Product created
+    Product -> Storage: Upload images
+    Storage --> Product: Image URLs
+    Product -> DB2: INSERT INTO product_images
+    DB2 --> Product: Images saved
+    Product --> API2: Product created
+    API2 --> App2: 201 Created + Product data
+    App2 --> Seller: Hiển thị đăng SP thành công
+}
+
+' ===== 3. TÌM KIẾM SẢN PHẨM =====
+rectangle "Tìm kiếm sản phẩm" {
+    actor Buyer
+    participant "Mobile App" as App3
+    participant "API Gateway" as API3
+    participant "Product Controller" as Product3
+    participant "Database" as DB3
+    
+    Buyer -> App3: Nhập từ khóa tìm kiếm
+    Buyer -> App3: Chọn bộ lọc (danh mục, giá)
+    App3 -> API3: GET /products?q=keyword&category=1&min=100&max=1000
+    API3 -> Product3: getProducts(req, res)
+    Product3 -> Product3: Build WHERE conditions
+    Product3 -> DB3: SELECT products with filters
+    DB3 --> Product3: Product list
+    Product3 -> DB3: SELECT product_images for products
+    DB3 --> Product3: Images data
+    Product3 -> Product3: Format response
+    Product3 --> API3: Products + Images
+    API3 --> App3: 200 OK + Product list
+    App3 -> App3: Display products in grid
+    App3 --> Buyer: Hiển thị kết quả tìm kiếm
+}
+
+' ===== 4. TẠO ĐƠN HÀNG =====
+rectangle "Tạo đơn hàng" {
+    actor Buyer2
+    participant "Mobile App" as App4
+    participant "API Gateway" as API4
+    participant "Order Controller" as Order
+    participant "Payment Controller" as Payment
+    participant "Wallet Controller" as Wallet
+    participant "Database" as DB4
+    
+    Buyer2 -> App4: Xem chi tiết sản phẩm
+    Buyer2 -> App4: Nhấn "Mua ngay"
+    App4 -> App4: Hiển thị form đặt hàng
+    Buyer2 -> App4: Xác nhận thông tin & thanh toán
+    App4 -> API4: POST /orders
+    API4 -> Order: createOrder(req, res)
+    Order -> Order: Validate order data
+    Order -> DB4: INSERT INTO orders
+    DB4 --> Order: Order created
+    Order -> Wallet: getBalance(user_id)
+    Wallet -> DB4: SELECT balance FROM wallets
+    DB4 --> Wallet: Balance amount
+    Wallet --> Order: User balance
+    Order -> Order: Check sufficient balance
+    Order -> Payment: processPayment(order_id, amount)
+    Payment -> DB4: UPDATE wallets (deduct)
+    Payment -> DB4: INSERT INTO transactions
+    DB4 --> Payment: Payment processed
+    Payment --> Order: Payment success
+    Order -> DB4: UPDATE orders status = 'paid'
+    DB4 --> Order: Order updated
+    Order --> API4: Order created + Payment success
+    API4 --> App4: 201 Created + Order data
+    App4 -> App4: Show order confirmation
+    App4 --> Buyer2: Hiển thị đơn hàng thành công
+}
+
+' ===== 5. NHẮN TIN GIỮA NGƯỜI MUA VÀ NGƯỜI BÁN =====
+rectangle "Nhắn tin" {
+    actor Buyer3
+    actor Seller3
+    participant "Mobile App (Buyer)" as App5
+    participant "Mobile App (Seller)" as App6
+    participant "API Gateway" as API5
+    participant "Message Controller" as Message
+    participant "Database" as DB5
+    participant "WebSocket Server" as WS
+    
+    Buyer3 -> App5: Nhập tin nhắn
+    App5 -> API5: POST /messages
+    API5 -> Message: sendMessage(req, res)
+    Message -> DB5: INSERT INTO messages
+    DB5 --> Message: Message saved
+    Message -> WS: Broadcast to recipient
+    WS --> App6: Push notification
+    App6 -> App6: Update chat UI
+    App6 --> Seller3: Hiển thị tin nhắn mới
+    
+    Note over App5, App6: Real-time messaging via WebSocket
+    
+    Seller3 -> App6: Trả lời tin nhắn
+    App6 -> API5: POST /messages
+    API5 -> Message: sendMessage(req, res)
+    Message -> DB5: INSERT INTO messages
+    DB5 --> Message: Message saved
+    Message -> WS: Broadcast to recipient
+    WS --> App5: Push notification
+    App5 -> App5: Update chat UI
+    App5 --> Buyer3: Hiển thị tin nhắn mới
+}
+
+' ===== 6. ADMIN PHÊ DUYỆT SẢN PHẨM =====
+rectangle "Admin phê duyệt sản phẩm" {
+    actor Admin
+    participant "Admin Dashboard" as Dashboard
+    participant "API Gateway" as API6
+    participant "Product Controller" as Product6
+    participant "Notification Controller" as Notif
+    participant "Database" as DB6
+    
+    Admin -> Dashboard: Xem danh sách SP chờ duyệt
+    Dashboard -> API6: GET /products/admin/pending
+    API6 -> Product6: getPendingProducts(req, res)
+    Product6 -> DB6: SELECT products WHERE status = 'pending'
+    DB6 --> Product6: Pending products
+    Product6 --> API6: Pending products list
+    API6 --> Dashboard: Display pending products
+    
+    Admin -> Dashboard: Chọn sản phẩm + "Phê duyệt"
+    Dashboard -> API6: PATCH /products/admin/{id}/status
+    API6 -> Product6: updateModerationStatus(req, res)
+    Product6 -> DB6: UPDATE products SET status = 'approved'
+    DB6 --> Product6: Product updated
+    Product6 -> Notif: sendNotification(user_id, "Sản phẩm đã được duyệt")
+    Notif -> DB6: INSERT INTO notifications
+    DB6 --> Notif: Notification saved
+    Product6 --> API6: Status updated
+    API6 --> Dashboard: 200 OK
+    Dashboard -> Dashboard: Remove from pending list
+    Dashboard --> Admin: Hiển thị phê duyệt thành công
+}
+
+@enduml

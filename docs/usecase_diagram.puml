@@ -1,0 +1,180 @@
+@startuml SecondHand_UseCase
+
+!theme plain
+skinparam actorStyle awesome
+left to right direction
+
+' ===== ACTORS =====
+actor User as "Người Dùng"
+actor Seller as "Người Bán"
+actor Buyer as "Người Mua"
+actor Admin as "Quản Trị Viên"
+
+' ===== USE CASE SYSTEM =====
+rectangle "SecondHand System" {
+    ' ===== AUTHENTICATION =====
+    package "Xác thực" {
+        usecase "Đăng ký" as UC1
+        usecase "Đăng nhập" as UC2
+        usecase "Đăng xuất" as UC3
+        usecase "Quên mật khẩu" as UC4
+        usecase "Đăng nhập Google/Facebook" as UC5
+    }
+    
+    ' ===== PROFILE MANAGEMENT =====
+    package "Quản lý hồ sơ" {
+        usecase "Xem hồ sơ cá nhân" as UC6
+        usecase "Chỉnh sửa hồ sơ" as UC7
+        usecase "Quản lý địa chỉ" as UC8
+        usecase "Tải lên avatar" as UC9
+    }
+    
+    ' ===== PRODUCT MANAGEMENT =====
+    package "Quản lý sản phẩm" {
+        usecase "Đăng sản phẩm mới" as UC10
+        usecase "Tải lên hình ảnh" as UC11
+        usecase "Chỉnh sửa sản phẩm" as UC12
+        usecase "Xóa sản phẩm" as UC13
+        usecase "Xem sản phẩm của tôi" as UC14
+        usecase "Quản lý trạng thái sản phẩm" as UC15
+    }
+    
+    ' ===== PRODUCT BROWSING =====
+    package "Duyệt sản phẩm" {
+        usecase "Tìm kiếm sản phẩm" as UC16
+        usecase "Lọc theo danh mục" as UC17
+        usecase "Lọc theo khoảng giá" as UC18
+        usecase "Sắp xếp sản phẩm" as UC19
+        usecase "Xem chi tiết sản phẩm" as UC20
+        usecase "Xem sản phẩm theo danh mục" as UC21
+    }
+    
+    ' ===== INTERACTIONS =====
+    package "Tương tác" {
+        usecase "Thêm vào yêu thích" as UC22
+        usecase "Xóa khỏi yêu thích" as UC23
+        usecase "Xem danh sách yêu thích" as UC24
+        usecase "Đánh giá sản phẩm" as UC25
+        usecase "Báo cáo sản phẩm" as UC26
+        usecase "Nhắn tin cho người bán" as UC27
+        usecase "Xem lịch sử nhắn tin" as UC28
+    }
+    
+    ' ===== TRANSACTIONS =====
+    package "Giao dịch" {
+        usecase "Tạo đơn hàng" as UC29
+        usecase "Xem lịch sử mua hàng" as UC30
+        usecase "Xem lịch sử bán hàng" as UC31
+        usecase "Quản lý đơn hàng" as UC32
+        usecase "Hủy đơn hàng" as UC33
+        usecase "Xác nhận đơn hàng" as UC34
+    }
+    
+    ' ===== PAYMENT =====
+    package "Thanh toán" {
+        usecase "Nạp tiền vào ví" as UC35
+        usecase "Thanh toán bằng ví" as UC36
+        usecase "Rút tiền từ ví" as UC37
+        usecase "Xem số dư ví" as UC38
+        usecase "Xem lịch sử giao dịch" as UC39
+    }
+    
+    ' ===== ADMIN FUNCTIONS =====
+    package "Quản trị" {
+        usecase "Phê duyệt sản phẩm" as UC40
+        usecase "Từ chối sản phẩm" as UC41
+        usecase "Quản lý người dùng" as UC42
+        usecase "Xử lý báo cáo" as UC43
+        usecase "Xem thống kê" as UC44
+        usecase "Quản lý danh mục" as UC45
+    }
+    
+    ' ===== NOTIFICATIONS =====
+    package "Thông báo" {
+        usecase "Nhận thông báo" as UC46
+        usecase "Xem lịch sử thông báo" as UC47
+        usecase "Đánh dấu đã đọc" as UC48
+    }
+}
+
+' ===== RELATIONSHIPS =====
+
+' User - Authentication
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+
+' User - Profile
+User --> UC6
+User --> UC7
+User --> UC8
+User --> UC9
+
+' Seller - Product Management
+Seller --> UC10
+Seller --> UC11
+Seller --> UC12
+Seller --> UC13
+Seller --> UC14
+Seller --> UC15
+
+' Buyer - Product Browsing
+Buyer --> UC16
+Buyer --> UC17
+Buyer --> UC18
+Buyer --> UC19
+Buyer --> UC20
+Buyer --> UC21
+
+' User - Interactions
+User --> UC22
+User --> UC23
+User --> UC24
+User --> UC25
+User --> UC26
+User --> UC27
+User --> UC28
+
+' Buyer - Transactions
+Buyer --> UC29
+Buyer --> UC30
+Seller --> UC31
+Seller --> UC32
+Buyer --> UC33
+Seller --> UC34
+
+' User - Payment
+User --> UC35
+User --> UC36
+User --> UC37
+User --> UC38
+User --> UC39
+
+' Admin - Admin Functions
+Admin --> UC40
+Admin --> UC41
+Admin --> UC42
+Admin --> UC43
+Admin --> UC44
+Admin --> UC45
+
+' User - Notifications
+User --> UC46
+User --> UC47
+User --> UC48
+
+' ===== INHERITANCE ====='
+Seller --|> User
+Buyer --|> User
+
+' ===== EXTENSIONS =====
+UC16 ..> UC17 : <<include>>
+UC16 ..> UC18 : <<include>>
+UC16 ..> UC19 : <<include>>
+
+' ===== GENERALIZATIONS =====
+UC29 ..> UC36 : <<extend>>
+
+@enduml
