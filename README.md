@@ -1,15 +1,42 @@
-# secondhand_app
+# Appsecondhand Flutter - PROJECT
 
-A new Flutter project.
+A Flutter mobile application for secondhand goods trading.
+
+## Overview
+
+This is the complete secondhand app built with Flutter, featuring:
+- User authentication and wallet system
+- Product listing and search
+- Messaging system for negotiations
+- Bank account management
+- Transaction history
+- Admin controls
+
+## Project Structure
+
+- `/lib` - Flutter application source code
+- `/backend` - Node.js backend APIs
+- `/database` - SQL database schemas
+- `/docs` - Documentation and diagrams
+- `/scripts` - Build and deployment scripts
+- `/assets` - Images and icons
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK
+- Node.js and npm
+- SQL Server database
+- Firebase credentials (optional)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Installation
+
+1. Clone the repository
+2. Run `flutter pub get` to install dependencies
+3. Set up the backend: `cd backend && npm install`
+4. Configure database connection in backend
+5. Run `flutter run` to start the app
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
